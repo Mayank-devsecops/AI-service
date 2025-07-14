@@ -1,0 +1,32 @@
+# gitlab-ci-rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gitlab-ci
+  namespace: ai-services # Or a dedicated CI/CD namespace
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitlab-ci-deployer
+  namespace: ai-services # Or a dedicated CI/CD namespace
+rules:
+- apiGroups: ["", "apps", "autoscaling", "networking.k8s.io"] # Add any other API groups your manifests use
+  resources: ["deployments", "services", "ingresses", "horizontalpodautoscalers", "pods", "secrets", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitlab-ci-deployer-binding
+  namespace: ai-services # Or a dedicated CI/CD namespace
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitlab-ci-deployer
+subjects:
+- kind: ServiceAccount
+  name: gitlab-ci
+  namespace: ai-services # Or a dedicated CI/CD namespace
