@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator-deployment
+  namespace: ai-services
+  labels:
+    app: load-generator
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+      - name: busybox-container
+        image: busybox:latest
+        command: ["sh", "-c", "while true; do wget -q -O /dev/null http://ai-services-service:3000; sleep 0.01; done"]
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+      restartPolicy: Always
+

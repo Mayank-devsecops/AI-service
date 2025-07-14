@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-services-db-config
+  namespace: ai-services
+data:
+  DATABASE_HOST: "mysql-service.mysql.svc.cluster.local"
+  DATABASE_PORT: "3306"
+  DATABASE_USER: "root"
+  DATABASE_NAME: "devops"

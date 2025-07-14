@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ai-services-ingress
+  namespace: ai-services 
+spec:
+  rules:
+  - host: 7b303a87581b.ngrok-free.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-services-service 
+            port:
+              number: 3000 

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-services-deployment
+  namespace: ai-services
+  labels:
+    app: ai-services
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ai-services
+  template:
+    metadata:
+      labels:
+        app: ai-services
+    spec:
+      containers:
+      - name: ai-services-container
+        image: mayank8765/ai_services:latest
+        ports:
+        - containerPort: 3000
+          name: http-web
+        env:
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: ai-services-db-config
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: ai-services-db-config
+              key: DATABASE_PORT
+        - name: DATABASE_USER
+          valueFrom:
+            configMapKeyRef:
+              name: ai-services-db-config
+              key: DATABASE_USER
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: ai-services-db-config
+              key: DATABASE_NAME
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ai-services-db-secret
+              key: db-password
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        volumeMounts:
+        - name: temp-storage
+          mountPath: /app/data
+      volumes:
+      - name: temp-storage
+        emptyDir: {}
