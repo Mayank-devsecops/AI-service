@@ -1,0 +1,9 @@
+# gitlab-ci-sa-token-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-ci-token
+  namespace: ai-services
+  annotations:
+    kubernetes.io/service-account.name: gitlab-ci # Link to your ServiceAccount
+type: kubernetes.io/service-account-token
